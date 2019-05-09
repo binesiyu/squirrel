@@ -173,11 +173,28 @@ const int N_KEY_ROLL_OVER = 50;
     ((rime_modifiers & kControlMask) && (rime_keycode == XK_c ||
                                          rime_keycode == XK_C ||
                                          rime_keycode == XK_bracketleft));
-    if (isVimBackInCommandMode &&
-        rime_get_api()->get_option(_session, "vim_mode") &&
-        !rime_get_api()->get_option(_session, "ascii_mode")) {
-      rime_get_api()->set_option(_session, "ascii_mode", True);
-      // NSLog(@"turned Chinese mode off in vim-like editor's command mode");
+    if (isVimBackInCommandMode) {
+      NSString* app = [_currentClient bundleIdentifier];
+      // USER DEFINE LIST
+      NSSet *apps = [NSSet setWithObjects:
+                     //@"com.jetbrains.intellij",
+                     //@"com.microsoft.VSCode",
+                     //@"com.google.android.studio-EAP",
+                     //@"com.google.android.studio",
+                     @"com.googlecode.iterm2",
+                     @"com.qvacua.VimR",
+                     @"org.vim.MacVim",
+                     nil];
+
+      BOOL isInVimMode = [apps containsObject:app];
+      // NSLog(@"Inputing...   %@   ...%s", app, isInVimMode ? "VimMode" : "balabala");
+      if (isInVimMode &&
+          !rime_get_api()->get_option(_session, "ascii_mode")) {
+         rime_get_api()->set_option(_session, "ascii_mode", True);
+         [self clearComposition];
+         //[self commitComposition:_currentClient];
+        NSLog(@"disable conversion to Chinese in VimMode command mode");
+      }
     }
   }
 
