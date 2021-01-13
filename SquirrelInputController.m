@@ -198,6 +198,7 @@ const int N_KEY_ROLL_OVER = 50;
     }
   }
 
+  
   // Simulate key-ups for every interesting key-down for chord-typing.
   if (handled) {
     bool is_chording_key =
@@ -216,6 +217,15 @@ const int N_KEY_ROLL_OVER = 50;
   }
 
   return handled;
+}
+
+-(void)clearComposition
+{
+  if (_session) {
+    rime_get_api()->clear_composition(_session);
+  }
+  
+  [NSApp.squirrelAppDelegate.panel hide];
 }
 
 -(void)onChordTimer:(NSTimer *)timer
